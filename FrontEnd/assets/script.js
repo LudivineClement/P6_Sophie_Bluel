@@ -1,20 +1,32 @@
+// création de variables globales pour la section filtre et galerie
+
 const filter = document.createElement("div");
 filter.classList.add("filter");
 portfolio.appendChild(filter);
 
-// fonction pour créer dynamiquement les filtres et les rendre fonctionnel
+const gallery = document.createElement("div");
+gallery.classList.add("gallery");
+portfolio.appendChild(gallery);
 
+// fonction pour créer dynamiquement les filtres et les rendre fonctionnel
 function filters(lst) {
   for (let i = 0; i < lst.length; i++) {
     const lstFilters = document.createElement("div");
     lstFilters.classList.add("button");
     filter.appendChild(lstFilters);
-    lstFilters.innerHTML += lst[i].category.name;
+    if (i != 0) {
+      lstFilters.innerHTML = lst[i].category.name;
+    } else {
+      lstFilters.innerHTML = "Tous";
+    }
 
     lstFilters.addEventListener("click", () => {
-      lstProjectsFilter = lstProjects.filter((el) => el.categoryId == i);
-      createGalery(lstProjectsFilter);
-      console.log(lstProjectsFilter);
+      if (i != 0) {
+        lstProjectsFilter = lstProjects.filter((el) => el.categoryId == i);
+        createGalery(lstProjectsFilter);
+      } else {
+        createGalery(lstProjects);
+      }
     });
   }
 }
@@ -22,14 +34,14 @@ function filters(lst) {
 // Fonction pour la création des éléments de la galerie
 
 function createGalery(lst) {
-  const gallery = document.createElement("div");
-  gallery.classList.add("gallery");
-  portfolio.appendChild(gallery);
+  gallery.innerHTML = "";
 
   for (let i = 0; i < lst.length; i++) {
     const figure = document.createElement("figure");
     const img = document.createElement("img");
     img.src = lst[i].imageUrl;
+    img.alt = lst[i].title;
+
     figure.appendChild(img);
 
     const figcaption = document.createElement("figcaption");
@@ -48,13 +60,12 @@ function getWorks() {
       lstProjects = data;
 
       jsonObject = lstProjects.map(JSON.stringify);
-      console.log(jsonObject);
       uniqueSet = new Set(jsonObject);
       uniqueArray = Array.from(uniqueSet).map(JSON.parse);
-      let deleteCategory = uniqueArray.splice(4, 8);
-      createGalery(lstProjects);
-      filters(uniqueArray);
       console.log(uniqueArray);
+      let deleteCategory = uniqueArray.splice(4, 8);
+      filters(uniqueArray);
+      createGalery(lstProjects);
     });
 }
 getWorks();
