@@ -179,71 +179,46 @@ li:hover {
   color: #b1663c;
 }
 
-.formulaire {
+.header_edit {
+  background-color: #000;
+  height: 60px;
   display: flex;
+  align-items: center;
   justify-content: center;
-  margin-bottom: 380px;
-  margin-top: 37px;
+  gap: 20px;
 }
 
-.login {
-  text-decoration: none;
-  color: #000;
-}
-
-.pagelogin {
-  text-decoration: none;
-  color: #000;
-  font-weight: 600;
-}
-
-.title_log_in {
-  text-align: center;
-  margin-top: 150px;
-}
-
-.form_log_in {
-  display: flex;
-  flex-direction: column;
-  margin: 0 auto;
-}
-
-.form_log_in label {
-  font-family: "Work Sans";
-  color: #3d3d3d;
-  font-weight: 500;
-}
-
-.form_log_in input {
-  width: 380px;
-  height: 50px;
-  margin-top: 7px;
-  margin-bottom: 30px;
+.header_edit .button {
   border: none;
-  box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
-}
-
-.form_log_in button {
-  width: 180px;
-  height: 35px;
-  background: #1d6154;
-  color: #fff;
+  background-color: #fff;
   border-radius: 60px;
-  border: none;
-  font-family: "Syne", sans-serif;
-  font-weight: 700;
-  margin-top: 7px;
-  margin-bottom: 28px;
-  cursor: pointer;
-  margin-left: auto;
-  margin-right: auto;
+  height: 38px;
+  font-weight: 500;
+  padding: 10px 20px;
+  font-family: "Work Sans";
 }
 
-.password_forgotten {
+.edition {
+  display: flex;
+  color: #fff;
+  align-items: center;
+  gap: 10px;
+}
+
+.edition img {
+  width: 15px;
+  height: 15px;
+}
+
+.edition p {
   font-family: "Work Sans";
-  font-weight: 500;
-  color: #3d3d3d;
-  text-align: center;
+  font-weight: 400;
+  font-size: 16px;
+}
+
+.logout {
+  text-decoration: none;
+  color: #000;
 }
 
 #introduction {
@@ -258,6 +233,25 @@ li:hover {
   margin: auto;
   width: 80%;
 }
+
+#introduction .modify_img {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 15px 0 0 57px;
+  cursor: pointer;
+}
+
+#introduction .modify_img img {
+  width: 17px;
+  height: 17px;
+  margin: 0;
+}
+
+#introduction .modify_img p {
+  margin: 0;
+}
+
 #introduction article {
   flex: 1;
 }
@@ -272,37 +266,33 @@ li:hover {
 #portfolio h2 {
   text-align: center;
   margin-bottom: 1em;
-  margin-top: 140px;
 }
 
-.filter {
+#portfolio .modify {
   display: flex;
   justify-content: center;
-  gap: 10px;
   align-items: center;
-  margin: 50px 0;
+  gap: 30px;
+  margin-top: 90px;
+  margin-bottom: 100px;
 }
 
-.button {
+#portfolio .modify .modify_project {
   display: flex;
   align-items: center;
-  border: 1px #1d6154 solid;
-  border-radius: 60px;
-  color: #1d6154;
-  background: #fff;
-  height: 28px;
-  font-family: "Syne", sans-serif;
-  font-weight: 700;
-  font-size: 16px;
-  text-align: center;
-  padding: 3px 20px;
+  margin-bottom: 27px;
+  gap: 10px;
+
   cursor: pointer;
 }
 
-.button:hover,
-.selected {
-  background: #1d6154;
-  color: #fff;
+.modify_project img {
+  width: 17px;
+  height: 17px;
+}
+
+.filter {
+  display: none;
 }
 
 .gallery {
