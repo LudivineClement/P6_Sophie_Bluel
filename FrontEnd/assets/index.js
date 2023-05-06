@@ -17,10 +17,7 @@ async function getWorks() {
       // newArray = new Set([...data]);
 
       // console.log("myset", newArray);
-      const groupByCategory = lstProjects.groupByToMap((cat) => {
-        return cat.categoryId;
-      });
-      console.log(groupByCategory);
+
       jsonObject = lstProjects.map(JSON.stringify);
       set = new Set(jsonObject);
       console.log("set", set);
@@ -35,7 +32,7 @@ async function getWorks() {
 }
 
 // fonction pour créer les catégories et rendre fonctionnel les filtres
-const createCategory = async () => {
+const createCategory = () => {
   const filter = document.createElement("div");
   filter.classList.add("filter");
   portfolio.appendChild(filter);
@@ -46,14 +43,13 @@ const createCategory = async () => {
     newArray
       .map(
         (categories) =>
-          `<div class="button" id="${categories.category.id}">${categories.category.name}</div>`
+          `<div class="button" id="${categories.category.name}">${categories.category.name}</div>`
       )
       .join("");
 
   let btnFilter = document.querySelectorAll(".button");
   for (let i = 0; i < btnFilter.length; i++) {
-    let btn = btnFilter[i];
-    btn.addEventListener("click", () => {
+    btnFilter[i].addEventListener("click", () => {
       if (i != 0) {
         lstProjectsFilter = lstProjects.filter((el) => el.categoryId == i);
         createGalery(lstProjectsFilter);
@@ -66,7 +62,7 @@ const createCategory = async () => {
 
 // fonction pour créer la galerie
 
-const createGalery = async (lst) => {
+const createGalery = (lst) => {
   let gallery = document.getElementsByClassName("gallery")[0];
 
   if (gallery == undefined) {
