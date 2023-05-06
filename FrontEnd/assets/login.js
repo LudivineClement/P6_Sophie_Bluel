@@ -1,6 +1,12 @@
+let userData = {}
+
+function redirection(){
+  document.location.href="edit.html"; 
+}
+
 async function login() {
-  let emailLogin = document.getElementById("email").value;
-  let passwordLogin = document.getElementById("password").value;
+  const emailLogin = document.getElementById("email").value;
+  const passwordLogin = document.getElementById("password").value;
 
   const user = {
     email: emailLogin,
@@ -17,26 +23,20 @@ async function login() {
   })
     .then((res) =>{
       if(res.ok) {
-        res.json().then((userData) =>
-        console.log(userData)) 
-        } 
-    })
-    
+        res.json()
+        .then((data) => {
+          userData = data.token;
+        }).then(() => redirection()); 
+        } else {
+          const error = "identifiants incorrects";
+          document.querySelector(".error").innerHTML = error;
+        }
+    })    
 }
 
-// let error = "identifiants incorrects";
 const btnForm = document.querySelector(".connexion");
 btnForm.addEventListener("submit", (e) => {
   e.preventDefault();
   login();
+  console.log(userData);
 });
-
-// document.location.href("edit.html");
-// else {
-//   document.querySelector(".error").innerHTML = error;
-// }
-
-// .then((res) => {
-//   if (res.ok) {
-//     res.json().then((data) => console.log(data));
-//   }

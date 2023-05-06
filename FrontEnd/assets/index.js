@@ -83,3 +83,5 @@ const createGalery = (lst) => {
 
   portfolio.appendChild(gallery);
 };
+
+
