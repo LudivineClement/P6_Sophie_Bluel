@@ -3,6 +3,14 @@
    License: none (public domain)
 */
 
+*,
+::before,
+::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
 html,
 body,
 div,
@@ -135,6 +143,128 @@ body {
   font-size: 14px;
   background: #fffef8;
 }
+
+.modal-container {
+  visibility: hidden;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  transition: visibility 0.4s;
+}
+.modal-container.active {
+  visibility: visible;
+}
+
+.overlay {
+  opacity: 0;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.3);
+  transition: opacity 0.4s 0.2s ease-out;
+}
+
+.modal-container.active .overlay {
+  opacity: 1;
+  transition: opacity 0.4s ease-out;
+}
+.modal {
+  opacity: 0;
+  width: 95%;
+  max-width: 630px;
+  min-width: 300px;
+  padding: 35px;
+  background: #fff;
+  border-radius: 10px;
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, calc(-50% - 50px));
+  transition: opacity 0.4s ease-out,
+  transform 0.4s ease-out;
+}
+
+.modal-container.active .modal {
+  opacity: 1;
+  transform: translate(-50%, -50%);
+  transition: opacity 0.4s 0.2s ease-out,
+  transform 0.4s 0.2s ease-out;
+}
+
+.close-modal {
+  border: none;
+  font-size: 12px;
+  position: absolute;
+  top: 35px;
+  right: 35px;
+  cursor: pointer;
+  background: none;
+  color: #000;
+}
+
+.modal h1 {
+  margin: 60px 0 45px ;
+  font-family: "Work Sans";
+  font-size: 26px;
+  font-weight: 400;
+  color: #000;
+  text-align: center;
+}
+
+.gallery_modal {
+  margin: 0 50px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.img_modal{
+  position: relative;
+  z-index: -1;
+}
+
+.img_modal img {
+  width: 80px; 
+}
+
+.text_modal {
+  color: #000;
+  font-weight: 400;
+  font-size: 12px;
+}
+
+
+.icon1_modal {
+  display: block;
+  width: 17px;
+  height: 17px;
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  margin-top: 5px;
+  right: 0;
+  margin-right: -5px;
+}
+
+
+.icon2_modal {
+  display: block;
+  width: 17px;
+  height: 17px;
+  position: absolute;
+  z-index: 1;
+  top:0;
+  margin-top: 5px;
+  right: 0;
+  margin-right: -28px;
+  
+}
+
+
+
 header {
   display: flex;
   justify-content: space-between;
@@ -239,7 +369,6 @@ li:hover {
   align-items: center;
   gap: 10px;
   margin: 15px 0 0 57px;
-  cursor: pointer;
 }
 
 #introduction .modify_img img {
@@ -250,6 +379,9 @@ li:hover {
 
 #introduction .modify_img p {
   margin: 0;
+  text-decoration: none;
+  color: #000;
+  cursor: pointer;
 }
 
 #introduction article {
@@ -282,13 +414,18 @@ li:hover {
   align-items: center;
   margin-bottom: 27px;
   gap: 10px;
-
-  cursor: pointer;
 }
 
 .modify_project img {
   width: 17px;
   height: 17px;
+}
+
+.modify_project p {
+  margin: 0;
+  text-decoration: none;
+  color: #000;
+  cursor: pointer;
 }
 
 .filter {

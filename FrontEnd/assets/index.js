@@ -27,7 +27,7 @@ async function getWorks() {
     })
     .then(() => {
       createCategory();
-      createGalery(lstProjects);
+      createWorks(lstProjects);
     });
 }
 
@@ -52,9 +52,9 @@ const createCategory = () => {
     btnFilter[i].addEventListener("click", () => {
       if (i != 0) {
         lstProjectsFilter = lstProjects.filter((el) => el.categoryId == i);
-        createGalery(lstProjectsFilter);
+        createWorks(lstProjectsFilter);
       } else {
-        createGalery(lstProjects);
+        createWorks(lstProjects);
       }
     });
   }
@@ -62,7 +62,7 @@ const createCategory = () => {
 
 // fonction pour créer la galerie
 
-const createGalery = (lst) => {
+const createWorks = (lst) => {
   let gallery = document.getElementsByClassName("gallery")[0];
 
   if (gallery == undefined) {
@@ -84,4 +84,13 @@ const createGalery = (lst) => {
   portfolio.appendChild(gallery);
 };
 
+// Apparition de la modal
 
+const modalContainer = document.querySelector(".modal-container");
+const modalTriggers = document.querySelectorAll(".modal-trigger");
+
+modalTriggers.forEach(trigger => trigger.addEventListener("click", toggleModal))
+
+function toggleModal(){
+  modalContainer.classList.toggle("active")
+}
