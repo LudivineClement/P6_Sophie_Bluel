@@ -170,12 +170,11 @@ body {
   opacity: 1;
   transition: opacity 0.4s ease-out;
 }
-.modal1 {
+.modal1, .modal2 {
   opacity: 0;
   width: 95%;
   max-width: 550px;
   min-width: 300px;
-  height: 650px;
   padding: 35px;
   background: #fff;
   border-radius: 10px;
@@ -187,21 +186,7 @@ body {
   transform 0.4s ease-out;
 }
 
-.modal2 {
-  opacity: 0;
-  width: 95%;
-  max-width: 550px;
-  min-width: 300px;
-  height: 650px;
-  padding: 35px;
-  background: #fff;
-  border-radius: 10px;
-  position: absolute;
-  top:50%;
-  left: 50%;
-  transform: translate(-50%, calc(-50% - 50px));
-  transition: opacity 0.4s ease-out,
-  transform 0.4s ease-out;
+.modal_display {
   display: none; 
 }
 
@@ -245,8 +230,7 @@ cursor: pointer;
 }
 
 .img_modal{
-  position: relative;
-  z-index: -1;
+margin-bottom: 10px;
 }
 
 .img_modal img {
@@ -263,11 +247,7 @@ cursor: pointer;
   display: block;
   width: 17px;
   height: 17px;
-  position: absolute;
-  z-index: 1;
-  top: 0;
   margin-top: 5px;
-  right: 0;
   margin-right: -5px;
   cursor: pointer;
 }
@@ -276,12 +256,11 @@ cursor: pointer;
   display: block;
   width: 17px;
   height: 17px;
-  position: absolute;
-  z-index: 1;
-  top:0;
-  margin-top: 5px;
-  right: 0;
-  margin-right: -20px;
+  position: relative;
+  margin-top: -80px;
+  margin-right:-55px;
+  margin-bottom: 65px;
+  margin-left: 18px;
   cursor: pointer;
 }
 

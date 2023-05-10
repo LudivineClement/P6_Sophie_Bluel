@@ -33,7 +33,6 @@ async function login() {
     });    
 }
 
-
 const btnForm = document.querySelector(".connexion");
 btnForm.addEventListener("submit", (e) => {
   e.preventDefault();

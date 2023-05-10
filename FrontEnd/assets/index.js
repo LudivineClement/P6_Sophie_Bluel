@@ -1,4 +1,4 @@
-// fonction pour récupérer le works et enlever les doublons
+// fonction pour récupérer la galerie et les catégories
 let lstGallery = [];
 let lstCategories = [];
 
@@ -8,6 +8,7 @@ const init = () => {
     document.querySelector('.logout').addEventListener("click", ()=> localStorage.removeItem('user'));
     }
 };
+
 const getWorks = async () => {
   await fetch("http://localhost:5678/api/works")
     .then((res) => res.json())
@@ -78,7 +79,6 @@ const createGallery = (lst) => {
 
 init();
 
-
 // ---------------- Apparition de la modal
 
 const modalContainer = document.querySelector(".modal-container");
@@ -102,16 +102,21 @@ function createGalleryModal(elt) {
     (img) =>
       `<div class="img_modal">
         <img src=${img.imageUrl} alt=${img.title}>
-        <img src="assets/icons/Group 9.svg" alt="" class="icon2_modal">
+        <img src="assets/icons/Group 9.svg" alt="" class="icon2_modal"> 
         <figcaption>éditer</figcaption>
 </div> `
   )
   .join("");
+
+  let iconDelete = document.querySelectorAll(".icon2_modal");
+  for (let i = 0; i < iconDelete.length; i++) {
+  iconDelete[i].addEventListener('click', ()=> console.log('test'));
+  }
+  
 }
 
 // fonction pour supprimer des projets
-const iconDelete = document.querySelector('.icon2_modal')
-console.log(iconDelete);
+
 
 
 //------- Ajouter des projets
