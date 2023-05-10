@@ -1,5 +1,3 @@
-let userData = {}
-
 function redirection(){
   document.location.href="edit.html"; 
 }
@@ -24,19 +22,20 @@ async function login() {
     .then((res) =>{
       if(res.ok) {
         res.json()
-        .then((data) => {
-          userData = data.token;
-        }).then(() => redirection()); 
-        } else {
-          const error = "identifiants incorrects";
-          document.querySelector(".error").innerHTML = error;
+      .then((data) => {
+        const userdata = data.token;
+        if (localStorage.user = userdata) {
+          redirection();
         }
-    })    
+        })} else {
+          document.querySelector(".error").innerHTML = "identifiants incorrects";
+        }
+    });    
 }
+
 
 const btnForm = document.querySelector(".connexion");
 btnForm.addEventListener("submit", (e) => {
   e.preventDefault();
   login();
-  console.log(userData);
 });

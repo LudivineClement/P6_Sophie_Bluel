@@ -1,34 +1,28 @@
 // fonction pour récupérer le works et enlever les doublons
-let lstProjects = [];
-let newArray = [];
+let lstGallery = [];
+let lstCategories = [];
 
-const init = () => {
+const init = () => {  
   getWorks();
+  if(document.querySelector('.logout')!=null){
+    document.querySelector('.logout').addEventListener("click", ()=> localStorage.removeItem('user'));
+    }
 };
-
-init();
-
-async function getWorks() {
+const getWorks = async () => {
   await fetch("http://localhost:5678/api/works")
     .then((res) => res.json())
     .then((data) => {
-      lstProjects = data;
-
-      // newArray = new Set([...data]);
-
-      // console.log("myset", newArray);
-
-      jsonObject = lstProjects.map(JSON.stringify);
-      set = new Set(jsonObject);
-      console.log("set", set);
-      newArray = Array.from(set).map(JSON.parse);
-      console.log("tab", newArray);
-      let deleteCategory = newArray.splice(3, 8);
+      lstGallery = data;     
     })
-    .then(() => {
-      createCategory();
-      createWorks(lstProjects);
-    });
+  await fetch("http://localhost:5678/api/categories")
+  .then((res) => res.json())
+  .then((data) => {
+    lstCategories = data;
+      
+  }).then(() => {
+    createCategory();
+    createGallery(lstGallery);
+  });
 }
 
 // fonction pour créer les catégories et rendre fonctionnel les filtres
@@ -40,10 +34,11 @@ const createCategory = () => {
   filter.innerHTML =
     `<div class="button" id="0">Tous</div>
   ` +
-    newArray
+    lstCategories
       .map(
         (categories) =>
-          `<div class="button" id="${categories.category.name}">${categories.category.name}</div>`
+        
+          `<div class="button" id="${categories.name}">${categories.name}</div>`
       )
       .join("");
 
@@ -51,10 +46,10 @@ const createCategory = () => {
   for (let i = 0; i < btnFilter.length; i++) {
     btnFilter[i].addEventListener("click", () => {
       if (i != 0) {
-        lstProjectsFilter = lstProjects.filter((el) => el.categoryId == i);
-        createWorks(lstProjectsFilter);
+        lstGalleryFilter = lstGallery.filter((el) => el.categoryId == i);
+        createGallery(lstGalleryFilter);
       } else {
-        createWorks(lstProjects);
+        createGallery(lstGallery);
       }
     });
   }
@@ -62,14 +57,11 @@ const createCategory = () => {
 
 // fonction pour créer la galerie
 
-const createWorks = (lst) => {
-  let gallery = document.getElementsByClassName("gallery")[0];
+let gallery = document.querySelector('.gallery')
+gallery = document.createElement("div");
+gallery.classList.add("gallery");
 
-  if (gallery == undefined) {
-    gallery = document.createElement("div");
-    gallery.classList.add("gallery");
-  }
-
+const createGallery = (lst) => {
   gallery.innerHTML = lst
     .map(
       (img) =>
@@ -84,13 +76,47 @@ const createWorks = (lst) => {
   portfolio.appendChild(gallery);
 };
 
-// Apparition de la modal
+init();
+
+
+// ---------------- Apparition de la modal
 
 const modalContainer = document.querySelector(".modal-container");
 const modalTriggers = document.querySelectorAll(".modal-trigger");
+const galleryModal = document.querySelector('.gallery_modal')
+const btnAdd = document.querySelector('.button_modal')
+const modal1 = document.querySelector('.modal1')
+const modal2 = document.querySelector('.modal2')
 
-modalTriggers.forEach(trigger => trigger.addEventListener("click", toggleModal))
+modalTriggers.forEach(trigger => trigger.addEventListener("click", toggleModal)
+)
 
 function toggleModal(){
   modalContainer.classList.toggle("active")
+  createGalleryModal(lstGallery)
 }
+
+// fonction pour faire apparaitre la galerie dans la modale
+function createGalleryModal(elt) {
+  galleryModal.innerHTML = elt .map(
+    (img) =>
+      `<div class="img_modal">
+        <img src=${img.imageUrl} alt=${img.title}>
+        <img src="assets/icons/Group 9.svg" alt="" class="icon2_modal">
+        <figcaption>éditer</figcaption>
+</div> `
+  )
+  .join("");
+}
+
+// fonction pour supprimer des projets
+const iconDelete = document.querySelector('.icon2_modal')
+console.log(iconDelete);
+
+
+//------- Ajouter des projets
+
+ // btnAdd.addEventListener('click',() => modal2.style.display = "block");
+
+
+
