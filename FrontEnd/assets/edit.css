@@ -170,11 +170,10 @@ body {
   opacity: 1;
   transition: opacity 0.4s ease-out;
 }
-.modal1, .modal2 {
+.modal {
   opacity: 0;
   width: 95%;
   max-width: 550px;
-  min-width: 300px;
   padding: 35px;
   background: #fff;
   border-radius: 10px;
@@ -190,7 +189,7 @@ body {
   display: none; 
 }
 
-.modal-container.active .modal1, .modal-container.active .modal2 {
+.modal-container.active .modal {
   opacity: 1;
   transform: translate(-50%, -50%);
   transition: opacity 0.4s 0.2s ease-out,
@@ -199,6 +198,7 @@ body {
 
 .arrow-modal {
 cursor: pointer;
+display: none;
 }
 
 .close-modal {
@@ -208,17 +208,13 @@ cursor: pointer;
   cursor: pointer;
 }
 
-.modal1 h1, .modal2 h1 {
+.modalTitle {
   margin: 30px 0 45px;
   font-family: "Work Sans";
   font-size: 26px;
   font-weight: 400;
   color: #000;
   text-align: center;
-}
-
-.modal2 #modalTitle {
-  margin: 20px 0 30px;
 }
 
 .gallery_modal {
@@ -252,7 +248,7 @@ margin-bottom: 10px;
   cursor: pointer;
 }
 
-.icon2_modal {
+.icon_delete {
   display: block;
   width: 17px;
   height: 17px;
@@ -264,27 +260,55 @@ margin-bottom: 10px;
   cursor: pointer;
 }
 
-.add_photo {
+.form_upload_img {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-top: 30px;
+}
+
+.form_upload_img label {
+  margin-left: 32px;
+}
+
+.form_upload_img #title_picture, #categories {
+  display: flex;
+  margin: auto;
+  font-family: "Work Sans";
+  color: #3d3d3d;
+  font-weight: 500;
+  width: 420px;
+  height: 50px;
+  margin-top: 7px;
+  margin-bottom: 30px;
+  border: none;
+  box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09)
+}
+
+.form_add_photo {
   width: 420px;
   height: 170px;
   border-radius: 3px;
   background: #E8F1F7;
   margin: auto;
+  margin-bottom: 30px;
   padding: 30px 0 20px;
+  cursor: pointer;
 }
 
-.add_photo img {
- display:block;
- margin:auto;
+.form_add_photo img {
+  display:block;
+  margin:auto;
 }
-
-.add_photo p {
+ 
+.form_add_photo .format_picture {
+  display: flex;
+  justify-content: center;
   font-size: 10px;
-  text-align: center;
   margin-top: 7px;
 }
-
-.button_add_picture {
+ 
+.form_add_photo .button_add_picture {
   margin: auto;
   margin-top: 20px;
   display: flex;
@@ -299,37 +323,14 @@ margin-bottom: 10px;
   font-family: "Syne", sans-serif;
   font-weight: 500;
   font-size: 14px;
-  text-align: center;
   cursor: pointer;
 }
 
-.button_add_picture .input_file {
-  display: none;
-}
-
-.validate_picture {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  margin-top: 30px;
-}
-
-.validate_picture label {
- margin-left: 32px;
-}
-
-.validate_picture #text, #categories {
-  display: flex;
-  margin: auto;
-  font-family: "Work Sans";
-  color: #3d3d3d;
-  font-weight: 500;
-  width: 420px;
-  height: 50px;
-  margin-top: 7px;
-  margin-bottom: 30px;
-  border: none;
-  box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09)
+.form_add_photo .img_uploaded {
+  display:block;
+  margin:auto;
+  height: 170px;
+  width: auto;
 }
 
 hr {
@@ -341,7 +342,7 @@ hr {
   margin-bottom: 30px;
 }
 
-.button_modal {
+.button_add_gallery {
   display: flex;
   align-items: center;
   margin: auto;
@@ -371,7 +372,7 @@ hr {
   color: #D65353;
 }
 
-.button_modal2 {
+.button_validate {
   display: flex;
   align-items: center;
   margin: auto;
@@ -384,7 +385,7 @@ hr {
   font-weight: 700;
   font-size: 14px;
   text-align: center;
-  padding: 10px 50px;
+  padding: 10px 100px;
   cursor: pointer;
 }
 
