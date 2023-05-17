@@ -26,8 +26,10 @@ async function login() {
         const userdata = data.token;
         if (localStorage.user = userdata) {
           redirection();
-        }
-        })} else {
+        } 
+        })} else if (res.status === '401') {
+          window.location.assign("login.html");
+        } else {
           document.querySelector(".error").innerHTML = "identifiants incorrects";
         }
     });    

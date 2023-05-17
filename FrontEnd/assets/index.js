@@ -74,8 +74,9 @@ const createGallery = (lst) => {
 getWorks();
 
 const logout = document.querySelector('.logout')
-//console.log(logout);
+console.log(logout);
 logout?.addEventListener("click", ()=> localStorage.removeItem('user'));
+
 
 // ---------------- Apparition de la modal-------------------------------//
 
@@ -87,10 +88,12 @@ const galleryModal = document.querySelector('.gallery_modal');
 modalTriggers.forEach(trigger => trigger.addEventListener("click", toggleModal)
 )
 
-function toggleModal(){
+function toggleModal() {
   modalContainer.classList.toggle("active")
-  createGalleryModal(lstGallery)
+  createGalleryModal(lstGallery);
+  firstModal();
 }
+
 
 // ---------------------fonction pour faire apparaitre la galerie dans la modale------------//
 
@@ -108,25 +111,40 @@ function createGalleryModal(elt) {
   let iconsDelete = document.querySelectorAll(".icon_delete");
   for (let iconDelete of iconsDelete) {
   iconDelete.addEventListener('click', deleteProject)
-  } 
+  }
+
+
 }
 
 //------------------------- fonction pour supprimer des projets-------------------------//
 
-async function deleteProject () {
-  let id = this.dataset.id;
+async function deleteProject (e) { 
+  let id = this.dataset.id; 
+  
  await fetch(`http://localhost:5678/api/works/${id}`, {
         method: "DELETE",
         headers: {
           "Accept": "*/*",
           "Authorization": "Bearer " + localStorage.user,
         },
-      }).then(alert('Voulez-vous vraiment supprimer ce projet ?'))
-}
+      }).then((res) => {
+        if (res.ok) {
+          e.target.parentElement.remove()
+          getWorks();
+          
+        } else if (res.status === "401") {
+          window.location.assign("login.html")
+        }
+      })
+};
+
 
 //---------------- AJOUTS DE PROJETS----------------------------//
 
 //initialisation de variables globales des éléments du formulaire utilisés dans plusieurs fonctions
+const arrowModal = document.querySelector(".arrow-modal")
+arrowModal.addEventListener("click", firstModal)
+
 const formUploadImg = document.createElement('form');
 
 const labelFile = document.createElement('label');
@@ -144,32 +162,62 @@ const btnValidate = document.createElement('button');
 const btnAdd = document.querySelector('.button_add_gallery');
 btnAdd?.addEventListener('click', removeModalGallery);
 
-// fonction pour vider le contenu de la modal "galerie photo"
+const linkModal = document.querySelector(".link_modal");
+
+// fonction pour afficher la modal "Galerie Photo"
+
+function firstModal () {
+  arrowModal.style.display = "none";
+  modalTitle.textContent = "Galerie Photo";
+  modalTitle.style.margin = "30px 0 45px";
+
+  formUploadImg.style.display = "none";
+  galleryModal.style.display= "flex";
+
+  document.querySelector('hr').style.display= "block";
+  btnAdd.style.display = "flex";
+ linkModal.style.display = "block";
+
+ createGalleryModal(lstGallery)
+}
+
+
+// fonction pour vider le contenu de la modal "Galerie Photo"
 
 function removeModalGallery() {
  galleryModal.style.display = "none";
  modalTitle.style.display = "none";
- document.querySelector(".link_modal").style.display = "none";
+ linkModal.style.display = "none";
  btnAdd.style.display = "none";
  document.querySelector('hr').style.display = "none";
 
- UploadFile();
+ modalAdd();
 
 }
 
-// fonction pour afficher les éléments de la modal "ajout photo"
-function UploadFile () {
-  const arrowModal = document.querySelector(".arrow-modal")
+linkModal.addEventListener('click', () => {
+  deleteProject(lstGallery);
+});
+
+console.log(linkModal);
+
+
+// fonction pour afficher dynamiquement les éléments de la modal "ajout photo"
+function modalAdd() {
   arrowModal.style.display = "block";
 
   modalTitle.style.display = "block";
   modalTitle.style.margin = " 20px 0 30px";
-  modalTitle.textContent = "Ajout Photo";
+  modalTitle.textContent = "Ajout photo";
 
   formUploadImg.classList.add('form_upload_img');
+  formUploadImg.style.display = "flex";
+  formUploadImg.innerHTML="";
   modal.appendChild(formUploadImg);
 
   labelFile.setAttribute("for", "file");
+  labelFile.style.padding = "30px";
+  labelFile.innerHTML="";
   formUploadImg.appendChild(labelFile);
 
   input_file.id = "file";
@@ -200,6 +248,7 @@ function UploadFile () {
   inputTitle.type = "text";
   inputTitle.id = "title_picture";
   inputTitle.name = "title_picture";
+  inputTitle.value ="";
   formUploadImg.appendChild(inputTitle);
 
   const labelCategories = document.createElement('label');
@@ -210,16 +259,34 @@ function UploadFile () {
   selectCategories.name= "categories";
   selectCategories.id= "categories";
   formUploadImg.appendChild(selectCategories);
+  categoriesSelect(lstCategories)
 
   const formHR = document.createElement('hr');
   formUploadImg.appendChild(formHR);
 
   btnValidate.classList.add('button_validate');
   btnValidate.textContent = 'Valider';
+  btnValidate.disabled= true;
+  btnValidate.style.background = "#A7A7A7";
+  btnValidate.style.cursor = "auto";
   formUploadImg.appendChild(btnValidate);
 
 }
 
+// Sélectionner une catégorie pour l'image à envoyer
+function categoriesSelect (categories) {
+  const categorySelect =  document.getElementById('categories');
+
+  categorySelect.innerHTML= `
+ <option value ="default" selected required></option>
+  `
+  categories.forEach((category) => {
+    const option = document.createElement('option');
+    option.value = category.id;
+    option.textContent= category.name;
+    categorySelect.appendChild(option);
+  });
+}
 
 // faire apparaitre la miniature de l'image uploaded dans le formulaire avant validation, récupérer l'image de l'utilisateur dans une variable (file) et l'ajouter au formulaire pr l'envoyer vers la base de données.
 
@@ -232,9 +299,10 @@ function previewFile() {
   }
 
   const file = this.files[0];
+  console.log(file);
   const file_reader = new FileReader();
   file_reader.readAsDataURL(file);
-  file_reader.addEventListener('load', (e) => displayImg(e, file));
+  file_reader.addEventListener('load', (e) =>  displayImg(e, file));
 
   // Sounission du formulaire et envoie du projet vers la base de données
 
@@ -254,11 +322,16 @@ function previewFile() {
         },
         body:formData,
       })
-      .then((res) => res.json())
-      .then((data) => console.log(data))
+      .then((res) => {
+        if(res.ok) {
+          modalAdd();
+           getWorks();
+           inputTitle.value = "";
+           selectCategories.value = "default";
+        }
+      })
   }
 }
-
 
 //fonction pour créer l'image, et l'intégrer dans le label
 
@@ -270,22 +343,13 @@ function displayImg (e, file) {
   img_element.src= e.target.result;
   labelFile.innerHTML="";
   labelFile.appendChild(img_element);
-  
-  categoriesSelect(lstCategories);
-
 }
 
-// Sélectionner une catégorie pour l'image à envoyer
-function categoriesSelect (categories) {
-  const categorySelect =  document.getElementById('categories');
-  categories.forEach((category) => {
-    const option = document.createElement('option');
-    option.value = category.id;
-    option.textContent= category.name;
-    categorySelect.appendChild(option);
-  });
 
-}
+
+
+
+
 
 
 
