@@ -16,6 +16,7 @@ const getWorks = async () => {
   }).then(() => {
     createCategory();
     createGallery(lstGallery);
+    createGalleryModal(lstGallery);
   });
 
 }
@@ -27,7 +28,7 @@ const createCategory = () => {
   portfolio.appendChild(filter);
 
   filter.innerHTML =
-    `<div class="button" id="0">Tous</div>
+    `<div class="button selected" id="0">Tous</div>
   ` +
     lstCategories
       .map(
@@ -46,6 +47,9 @@ const createCategory = () => {
       } else {
         createGallery(lstGallery);
       }
+
+      btnFilter.forEach((btn) => btn.classList.remove("selected"));
+      btnFilter[i].classList.add("selected");
     });
   }
 };
@@ -78,12 +82,10 @@ console.log(logout);
 logout?.addEventListener("click", ()=> localStorage.removeItem('user'));
 
 
-// ---------------- Apparition de la modal-------------------------------//
+// ---------------- Apparition de la modal sur les 3 liens "modifier" -------------------------------//
 
 const modalContainer = document.querySelector(".modal-container");
 const modalTriggers = document.querySelectorAll(".modal-trigger");
-const modal = document.querySelector('.modal');
-const galleryModal = document.querySelector('.gallery_modal');
 
 modalTriggers.forEach(trigger => trigger.addEventListener("click", toggleModal)
 )
@@ -91,13 +93,17 @@ modalTriggers.forEach(trigger => trigger.addEventListener("click", toggleModal)
 function toggleModal() {
   modalContainer.classList.toggle("active")
   createGalleryModal(lstGallery);
-  firstModal();
+  resetForm();
 }
 
+const modalLinks = document.querySelectorAll(".modalLink");
+modalLinks.forEach(modalLink => modalLink.addEventListener("click", firstModal));
 
-// ---------------------fonction pour faire apparaitre la galerie dans la modale------------//
+
+// ---------------------fonction pour faire apparaitre la galerie dans la modale et ajouter les icones suppression ------------//
 
 function createGalleryModal(elt) {
+  const galleryModal = document.querySelector('.gallery_modal');
   galleryModal.innerHTML = elt .map(
     (img) =>
       `<div class="img_modal">
@@ -112,8 +118,6 @@ function createGalleryModal(elt) {
   for (let iconDelete of iconsDelete) {
   iconDelete.addEventListener('click', deleteProject)
   }
-
-
 }
 
 //------------------------- fonction pour supprimer des projets-------------------------//
@@ -138,140 +142,53 @@ async function deleteProject (e) {
       })
 };
 
+const deleteModal = document.querySelector(".link_modal");
+deleteModal.addEventListener("click", () => {
+  for (let i = 0; i < lstGallery.length; i++) {
+
+  }
+});
 
 //---------------- AJOUTS DE PROJETS----------------------------//
 
 //initialisation de variables globales des éléments du formulaire utilisés dans plusieurs fonctions
+const modal = document.querySelector('.modal');
+const modal_add= document.querySelector('.modal_add');
+
 const arrowModal = document.querySelector(".arrow-modal")
 arrowModal.addEventListener("click", firstModal)
 
-const formUploadImg = document.createElement('form');
-
-const labelFile = document.createElement('label');
-labelFile.classList.add('form_add_photo');
-
-const modalTitle = document.querySelector(".modalTitle");
-
-const input_file = document.createElement('input');
-input_file.classList.add('input_file');
-
-const inputTitle = document.createElement('input');
-const selectCategories = document.createElement('select');
-const btnValidate = document.createElement('button');
+const formUploadImg = document.querySelector(".form_upload_img");
+const labelFile= document.querySelector(".form_add_photo");
+const input_file = document.createElement("input");
 
 const btnAdd = document.querySelector('.button_add_gallery');
-btnAdd?.addEventListener('click', removeModalGallery);
+btnAdd?.addEventListener('click', modalAdd);
 
-const linkModal = document.querySelector(".link_modal");
 
-// fonction pour afficher la modal "Galerie Photo"
+// fonction qui affiche la première modale
 
-function firstModal () {
-  arrowModal.style.display = "none";
-  modalTitle.textContent = "Galerie Photo";
-  modalTitle.style.margin = "30px 0 45px";
-
-  formUploadImg.style.display = "none";
-  galleryModal.style.display= "flex";
-
-  document.querySelector('hr').style.display= "block";
-  btnAdd.style.display = "flex";
- linkModal.style.display = "block";
-
- createGalleryModal(lstGallery)
+function firstModal() {
+  modal.style.display = "block";
+  modal_add.style.display = "none";
 }
 
-
-// fonction pour vider le contenu de la modal "Galerie Photo"
-
-function removeModalGallery() {
- galleryModal.style.display = "none";
- modalTitle.style.display = "none";
- linkModal.style.display = "none";
- btnAdd.style.display = "none";
- document.querySelector('hr').style.display = "none";
-
- modalAdd();
-
-}
-
-linkModal.addEventListener('click', () => {
-  deleteProject(lstGallery);
-});
-
-console.log(linkModal);
-
-
-// fonction pour afficher dynamiquement les éléments de la modal "ajout photo"
+// // fonction pour afficher dynamiquement les éléments de la deuxième modale
 function modalAdd() {
-  arrowModal.style.display = "block";
+  modal.style.display = "none";
+  modal_add.style.display = "block";
 
-  modalTitle.style.display = "block";
-  modalTitle.style.margin = " 20px 0 30px";
-  modalTitle.textContent = "Ajout photo";
-
-  formUploadImg.classList.add('form_upload_img');
-  formUploadImg.style.display = "flex";
-  formUploadImg.innerHTML="";
-  modal.appendChild(formUploadImg);
-
-  labelFile.setAttribute("for", "file");
-  labelFile.style.padding = "30px";
-  labelFile.innerHTML="";
-  formUploadImg.appendChild(labelFile);
-
-  input_file.id = "file";
   input_file.type = "file";
+  input_file.id = "file"
+  input_file.name = "file";
   input_file.accept = "image/png, image/jpeg";
-  input_file.style.display = "none";
+  input_file.style.display= "none";
   formUploadImg.appendChild(input_file);
-
-  const imgForm = document.createElement('img');
-  imgForm.src="assets/icons/add_pic.svg";
-  labelFile.appendChild(imgForm);
-
-  const btnAddFiles = document.createElement('span');
-  btnAddFiles.classList.add('button_add_picture');
-  btnAddFiles.textContent= '+ Ajouter photo';
-  labelFile.appendChild(btnAddFiles);
-
-  const formatFiles = document.createElement('span');
-  formatFiles.classList.add('format_picture');
-  formatFiles.textContent= 'jpg, png: 4mo max';
-  labelFile.appendChild(formatFiles);
-
-  const labelTitle = document.createElement('label');
-  labelTitle.setAttribute("for", "title_picture");
-  labelTitle.textContent= "Titre";
-  formUploadImg.appendChild(labelTitle);
-
-  inputTitle.type = "text";
-  inputTitle.id = "title_picture";
-  inputTitle.name = "title_picture";
-  inputTitle.value ="";
-  formUploadImg.appendChild(inputTitle);
-
-  const labelCategories = document.createElement('label');
-  labelCategories.setAttribute("for", "categories");
-  labelCategories.textContent= "Catégories";
-  formUploadImg.appendChild(labelCategories);
-
-  selectCategories.name= "categories";
-  selectCategories.id= "categories";
-  formUploadImg.appendChild(selectCategories);
-  categoriesSelect(lstCategories)
-
-  const formHR = document.createElement('hr');
-  formUploadImg.appendChild(formHR);
-
-  btnValidate.classList.add('button_validate');
-  btnValidate.textContent = 'Valider';
-  btnValidate.disabled= true;
-  btnValidate.style.background = "#A7A7A7";
-  btnValidate.style.cursor = "auto";
-  formUploadImg.appendChild(btnValidate);
-
+  
+  categoriesSelect(lstCategories);  
 }
+
+
 
 // Sélectionner une catégorie pour l'image à envoyer
 function categoriesSelect (categories) {
@@ -289,20 +206,52 @@ function categoriesSelect (categories) {
 }
 
 // faire apparaitre la miniature de l'image uploaded dans le formulaire avant validation, récupérer l'image de l'utilisateur dans une variable (file) et l'ajouter au formulaire pr l'envoyer vers la base de données.
+const inputTitle = document.getElementById("title_picture");
+const selectCategories= document.getElementById("categories")
 
-input_file?.addEventListener("change", previewFile);
+input_file.addEventListener("change", previewFile);
 
-function previewFile() {
+
+function previewFile(e) {
   const file_extension_regex = /\.(jpe?g|png)$/i;
-  if(this.files.length === 0 || !file_extension_regex.test(this.files[0].name) || this.files[0].size < 40000) {
+  if(this.files.length === 0 || !file_extension_regex.test(this.files[0].name)) {
     return;
   }
 
-  const file = this.files[0];
+  let file = e.target.files[0];
   console.log(file);
-  const file_reader = new FileReader();
-  file_reader.readAsDataURL(file);
-  file_reader.addEventListener('load', (e) =>  displayImg(e, file));
+  let url = URL.createObjectURL(file);
+  displayImg();
+
+  //fonction pour créer l'image, et l'intégrer dans le label
+
+ function displayImg () {
+  labelFile.style.padding = "0px";
+
+  const img_element = document.createElement('img');
+  img_element.classList.add('img_uploaded')
+  img_element.src= url;
+  labelFile.innerHTML="";
+  labelFile.appendChild(img_element);
+}
+
+  // fonction pour mettre le bouton valider en vert une fois les conditions remplies
+  function btnValidateForm() {
+    const btnValidate= document.querySelector('.button_validate');
+    if (inputTitle.value !="" && selectCategories.value !=="default" &&  input_file.files.length > 0 ) {
+      btnValidate.style.background = "#1D6154";
+      btnValidate.disabled= false;
+      btnValidate.style.cursor= "pointer";
+    } else {
+      btnValidate.disabled= true;
+      btnValidate.style.background = "#A7A7A7";
+      btnValidate.style.cursor = "auto";
+    }
+  };
+  
+  inputTitle.addEventListener('input', btnValidateForm);
+  selectCategories.addEventListener('input', btnValidateForm);
+  input_file.addEventListener('input', btnValidateForm);
 
   // Sounission du formulaire et envoie du projet vers la base de données
 
@@ -311,7 +260,7 @@ function previewFile() {
   function addProject (e) {
     e.preventDefault();
     const formData = new FormData();
-    formData.append('image', file);
+    formData.append("image", input_file.files[0]);
     formData.append('title', inputTitle.value);
     formData.append('category', selectCategories.value);
 
@@ -324,28 +273,21 @@ function previewFile() {
       })
       .then((res) => {
         if(res.ok) {
-          modalAdd();
+          resetForm();
            getWorks();
-           inputTitle.value = "";
-           selectCategories.value = "default";
+           firstModal();
         }
       })
   }
 }
 
-//fonction pour créer l'image, et l'intégrer dans le label
+function resetForm() {
+    input_file.value = "";
+    inputTitle.value = "";
+    selectCategories.value = "default";
+  }
 
-function displayImg (e, file) {
-  labelFile.style.padding = "0px";
-
-  const img_element = document.createElement('img');
-  img_element.classList.add('img_uploaded')
-  img_element.src= e.target.result;
-  labelFile.innerHTML="";
-  labelFile.appendChild(img_element);
-}
-
-
+ 
 
 
 

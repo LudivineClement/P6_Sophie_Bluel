@@ -307,7 +307,6 @@ li:hover {
   cursor: pointer;
 }
 
-.button:hover,
 .selected {
   background: #1d6154;
   color: #fff;

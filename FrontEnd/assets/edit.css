@@ -170,7 +170,7 @@ body {
   opacity: 1;
   transition: opacity 0.4s ease-out;
 }
-.modal {
+.modal, .modal_add {
   opacity: 0;
   width: 95%;
   max-width: 550px;
@@ -185,11 +185,11 @@ body {
   transform 0.4s ease-out;
 }
 
-.modal_display {
+.modal_add {
   display: none; 
 }
 
-.modal-container.active .modal {
+.modal-container.active .modal, .modal-container.active .modal_add {
   opacity: 1;
   transform: translate(-50%, -50%);
   transition: opacity 0.4s 0.2s ease-out,
@@ -198,7 +198,6 @@ body {
 
 .arrow-modal {
 cursor: pointer;
-display: none;
 }
 
 .close-modal {
@@ -511,6 +510,28 @@ li:hover {
 #introduction article {
   flex: 1;
 }
+
+#introduction .modify_article {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 30px;
+}
+
+#introduction .modify_article p {
+  margin: 0;
+  text-decoration: none;
+  color: #000;
+  cursor: pointer;
+}
+
+#introduction .modify_article img {
+  width: 17px;
+  height: 17px;
+  margin: 0;
+}
+
+
 #introduction h2 {
   margin-bottom: 1em;
 }
