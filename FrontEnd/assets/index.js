@@ -93,7 +93,6 @@ modalTriggers.forEach(trigger => trigger.addEventListener("click", toggleModal)
 function toggleModal() {
   modalContainer.classList.toggle("active")
   createGalleryModal(lstGallery);
-  resetForm();
 }
 
 const modalLinks = document.querySelectorAll(".modalLink");
@@ -136,8 +135,9 @@ async function deleteProject (e) {
           e.target.parentElement.remove()
           getWorks();
           
-        } else if (res.status === "401") {
-          window.location.assign("login.html")
+        } else if (res.status == "401") {
+          alert('session expirée, merci de vous reconnecter');
+          document.location.href=("login.html"); 
         }
       })
 };
@@ -162,8 +162,13 @@ const formUploadImg = document.querySelector(".form_upload_img");
 const labelFile= document.querySelector(".form_add_photo");
 const input_file = document.createElement("input");
 
+const img_element = document.createElement('img');
+img_element.classList.add('img_uploaded')
+
 const btnAdd = document.querySelector('.button_add_gallery');
 btnAdd?.addEventListener('click', modalAdd);
+
+const btnValidate= document.querySelector('.button_validate');
 
 
 // fonction qui affiche la première modale
@@ -171,6 +176,7 @@ btnAdd?.addEventListener('click', modalAdd);
 function firstModal() {
   modal.style.display = "block";
   modal_add.style.display = "none";
+  resetForm();
 }
 
 // // fonction pour afficher dynamiquement les éléments de la deuxième modale
@@ -184,11 +190,15 @@ function modalAdd() {
   input_file.accept = "image/png, image/jpeg";
   input_file.style.display= "none";
   formUploadImg.appendChild(input_file);
-  
-  categoriesSelect(lstCategories);  
+  input_file.value = "";
+  inputTitle.value = "";
+
+  categoriesSelect(lstCategories);
+
+  btnValidate.disabled= true;
+  btnValidate.style.background = "#A7A7A7";
+  btnValidate.style.cursor = "auto";
 }
-
-
 
 // Sélectionner une catégorie pour l'image à envoyer
 function categoriesSelect (categories) {
@@ -205,12 +215,11 @@ function categoriesSelect (categories) {
   });
 }
 
-// faire apparaitre la miniature de l'image uploaded dans le formulaire avant validation, récupérer l'image de l'utilisateur dans une variable (file) et l'ajouter au formulaire pr l'envoyer vers la base de données.
+// récupérer l'image de l'utilisateur dans une variable (file), et faire apparaitre la miniature de l'image uploaded dans le formulaire avant validation 
 const inputTitle = document.getElementById("title_picture");
 const selectCategories= document.getElementById("categories")
 
 input_file.addEventListener("change", previewFile);
-
 
 function previewFile(e) {
   const file_extension_regex = /\.(jpe?g|png)$/i;
@@ -227,67 +236,74 @@ function previewFile(e) {
 
  function displayImg () {
   labelFile.style.padding = "0px";
-
-  const img_element = document.createElement('img');
-  img_element.classList.add('img_uploaded')
   img_element.src= url;
   labelFile.innerHTML="";
   labelFile.appendChild(img_element);
-}
-
-  // fonction pour mettre le bouton valider en vert une fois les conditions remplies
-  function btnValidateForm() {
-    const btnValidate= document.querySelector('.button_validate');
-    if (inputTitle.value !="" && selectCategories.value !=="default" &&  input_file.files.length > 0 ) {
-      btnValidate.style.background = "#1D6154";
-      btnValidate.disabled= false;
-      btnValidate.style.cursor= "pointer";
-    } else {
-      btnValidate.disabled= true;
-      btnValidate.style.background = "#A7A7A7";
-      btnValidate.style.cursor = "auto";
-    }
-  };
-  
-  inputTitle.addEventListener('input', btnValidateForm);
-  selectCategories.addEventListener('input', btnValidateForm);
-  input_file.addEventListener('input', btnValidateForm);
-
-  // Sounission du formulaire et envoie du projet vers la base de données
-
-  formUploadImg.addEventListener('submit', addProject);
-
-  function addProject (e) {
-    e.preventDefault();
-    const formData = new FormData();
-    formData.append("image", input_file.files[0]);
-    formData.append('title', inputTitle.value);
-    formData.append('category', selectCategories.value);
-
-    fetch('http://localhost:5678/api/works', {
-        method: "POST",
-        headers: {
-          "Authorization": "Bearer " + localStorage.user,
-        },
-        body:formData,
-      })
-      .then((res) => {
-        if(res.ok) {
-          resetForm();
-           getWorks();
-           firstModal();
-        }
-      })
   }
 }
+
+// fonction pour mettre le bouton valider en vert une fois les conditions remplies
+function btnValidateForm() {
+  if (inputTitle.value !="" && selectCategories.value !=="default" &&  input_file.files.length > 0 ) {
+    btnValidate.style.background = "#1D6154";
+    btnValidate.disabled= false;
+    btnValidate.style.cursor= "pointer";
+  } else {
+    btnValidate.disabled= true;
+    btnValidate.style.background = "#A7A7A7";
+    btnValidate.style.cursor = "auto";
+  }
+};
+
+inputTitle.addEventListener('input', btnValidateForm);
+selectCategories.addEventListener('input', btnValidateForm);
+input_file.addEventListener('input', btnValidateForm);
+
+// Sounission du formulaire et envoie du projet vers la base de données
+
+formUploadImg.addEventListener('submit', addProject);
+
+async function addProject (e) {
+  e.preventDefault();
+  const formData = new FormData();
+  formData.append("image", input_file.files[0]);
+  formData.append('title', inputTitle.value);
+  formData.append('category', selectCategories.value);
+
+ await fetch('http://localhost:5678/api/works', {
+      method: "POST",
+      headers: {
+        "Authorization": "Bearer " + localStorage.user,
+      },
+      body:formData,
+    })
+    .then((res) => {
+      if(res.ok) {
+        getWorks();
+        resetForm();
+        firstModal()
+      } else if (res.status == "401") {
+        alert('session expirée, merci de vous reconnecter');
+        document.location.href=("login.html"); 
+      }
+    })
+}
+
+
+// fonction pour reset le formulaire
 
 function resetForm() {
-    input_file.value = "";
-    inputTitle.value = "";
-    selectCategories.value = "default";
-  }
+  labelFile.style.padding = "30px 0 0"
+  labelFile.innerHTML=`
+  <img src="assets/icons/add_pic.svg" alt="">
+  <div class="button_add_picture">+ Ajouter photo</div>
+  <span class="format_picture">jpg, png: 4mo max</span>
+  `
+  inputTitle.value = "";
+  selectCategories.value = "default";
+}
 
- 
+
 
 
 

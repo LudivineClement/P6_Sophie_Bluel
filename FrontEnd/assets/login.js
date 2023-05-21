@@ -27,8 +27,8 @@ async function login() {
         if (localStorage.user = userdata) {
           redirection();
         } 
-        })} else if (res.status === '401') {
-          window.location.assign("login.html");
+        })} else if (res.status == "401") {
+          document.location.href=("login.html"); 
         } else {
           document.querySelector(".error").innerHTML = "identifiants incorrects";
         }
@@ -40,4 +40,5 @@ btnForm.addEventListener("submit", (e) => {
   e.preventDefault();
   login();
 });
+
 
