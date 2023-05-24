@@ -78,11 +78,10 @@ const createGallery = (lst) => {
 getWorks();
 
 const logout = document.querySelector('.logout')
-console.log(logout);
 logout?.addEventListener("click", ()=> localStorage.removeItem('user'));
 
 
-// ---------------- Apparition de la modal sur les 3 liens "modifier" -------------------------------//
+// ---------------- Apparition de la modal sur le lien "modifier" -------------------------------//
 
 const modalContainer = document.querySelector(".modal-container");
 const modalTriggers = document.querySelectorAll(".modal-trigger");
@@ -95,28 +94,32 @@ function toggleModal() {
   createGalleryModal(lstGallery);
 }
 
-const modalLinks = document.querySelectorAll(".modalLink");
-modalLinks.forEach(modalLink => modalLink.addEventListener("click", firstModal));
+const modalLink = document.querySelector(".modalLink");
+if (modalLink != null)
+modalLink.addEventListener("click", firstModal);
 
 
 // ---------------------fonction pour faire apparaitre la galerie dans la modale et ajouter les icones suppression ------------//
 
 function createGalleryModal(elt) {
   const galleryModal = document.querySelector('.gallery_modal');
-  galleryModal.innerHTML = elt .map(
-    (img) =>
-      `<div class="img_modal">
-        <img src=${img.imageUrl} alt=${img.title} data-id=${img.id}>
-        <img src="assets/icons/Group 9.svg" alt="" class="icon_delete" data-id=${img.id}> 
-        <figcaption>éditer</figcaption>
-</div> `
-  )
-  .join("");
-
-  let iconsDelete = document.querySelectorAll(".icon_delete");
-  for (let iconDelete of iconsDelete) {
-  iconDelete.addEventListener('click', deleteProject)
+  if (galleryModal != null) {
+    galleryModal.innerHTML = elt .map(
+      (img) =>
+        `<div class="img_modal">
+          <img src=${img.imageUrl} alt=${img.title} data-id=${img.id}>
+          <img src="assets/icons/Group 9.svg" alt="" class="icon_delete" data-id=${img.id}> 
+          <figcaption>éditer</figcaption>
+  </div> `
+    )
+    .join("");
+  
+    let iconsDelete = document.querySelectorAll(".icon_delete");
+    for (let iconDelete of iconsDelete) {
+    iconDelete.addEventListener('click', deleteProject)
+    }
   }
+  
 }
 
 //------------------------- fonction pour supprimer des projets-------------------------//
@@ -142,13 +145,6 @@ async function deleteProject (e) {
       })
 };
 
-const deleteModal = document.querySelector(".link_modal");
-deleteModal.addEventListener("click", () => {
-  for (let i = 0; i < lstGallery.length; i++) {
-
-  }
-});
-
 //---------------- AJOUTS DE PROJETS----------------------------//
 
 //initialisation de variables globales des éléments du formulaire utilisés dans plusieurs fonctions
@@ -156,6 +152,7 @@ const modal = document.querySelector('.modal');
 const modal_add= document.querySelector('.modal_add');
 
 const arrowModal = document.querySelector(".arrow-modal")
+if (arrowModal != null)
 arrowModal.addEventListener("click", firstModal)
 
 const formUploadImg = document.querySelector(".form_upload_img");
@@ -179,7 +176,7 @@ function firstModal() {
   resetForm();
 }
 
-// // fonction pour afficher dynamiquement les éléments de la deuxième modale
+// // fonction pour afficher la deuxième modale
 function modalAdd() {
   modal.style.display = "none";
   modal_add.style.display = "block";
@@ -190,8 +187,6 @@ function modalAdd() {
   input_file.accept = "image/png, image/jpeg";
   input_file.style.display= "none";
   formUploadImg.appendChild(input_file);
-  input_file.value = "";
-  inputTitle.value = "";
 
   categoriesSelect(lstCategories);
 
@@ -228,7 +223,6 @@ function previewFile(e) {
   }
 
   let file = e.target.files[0];
-  console.log(file);
   let url = URL.createObjectURL(file);
   displayImg();
 
@@ -255,13 +249,15 @@ function btnValidateForm() {
   }
 };
 
-inputTitle.addEventListener('input', btnValidateForm);
-selectCategories.addEventListener('input', btnValidateForm);
-input_file.addEventListener('input', btnValidateForm);
+if (inputTitle != null) {
+  inputTitle.addEventListener('input', btnValidateForm);
+  selectCategories.addEventListener('input', btnValidateForm);
+  input_file.addEventListener('input', btnValidateForm);
+  formUploadImg.addEventListener('submit', addProject);
+}
+
 
 // Sounission du formulaire et envoie du projet vers la base de données
-
-formUploadImg.addEventListener('submit', addProject);
 
 async function addProject (e) {
   e.preventDefault();
@@ -288,7 +284,6 @@ async function addProject (e) {
       }
     })
 }
-
 
 // fonction pour reset le formulaire
 

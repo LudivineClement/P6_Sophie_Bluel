@@ -358,7 +358,7 @@ hr {
   cursor: pointer;
 }
 
-.link_modal {
+.delete_modal {
   display: flex;
   justify-content: center;
   text-decoration: none;
