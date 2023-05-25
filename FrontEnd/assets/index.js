@@ -1,27 +1,22 @@
-//------------------------- fonction pour récupérer la galerie et les catégories
+//------------------------- fonction pour récupérer la galerie et les catégories----------------------------------//
 let lstGallery = [];
 let lstCategories = [];
 
 const getWorks = async () => {
   await fetch("http://localhost:5678/api/works")
-    .then((res) => res.json())
-    .then((data) => {
-      lstGallery = data;     
-    })
+    .then(res => res.json())
+    .then(data => lstGallery = data);
   await fetch("http://localhost:5678/api/categories")
-  .then((res) => res.json())
-  .then((data) => {
-    lstCategories = data;
-      
-  }).then(() => {
-    createCategory();
-    createGallery(lstGallery);
-    createGalleryModal(lstGallery);
+    .then(res => res.json())
+    .then(data => lstCategories = data)
+    .then(() => {
+      createCategory();
+      createGallery(lstGallery);
+      createGalleryModal(lstGallery);
   });
-
 }
 
-// -------------------------- fonction pour créer les catégories et rendre fonctionnel les filtres
+// -------------------------- fonction pour créer les catégories et rendre fonctionnel les filtres----------------------------------//
 const createCategory = () => {
   const filter = document.createElement("div");
   filter.classList.add("filter");
@@ -41,7 +36,7 @@ const createCategory = () => {
   let btnFilter = document.querySelectorAll(".button");
   for (let i = 0; i < btnFilter.length; i++) {
     btnFilter[i].addEventListener("click", () => {
-      if (i != 0) {
+      if (i !== 0) {
         lstGalleryFilter = lstGallery.filter((el) => el.categoryId == i);
         createGallery(lstGalleryFilter);
       } else {
@@ -54,40 +49,31 @@ const createCategory = () => {
   }
 };
 
-//------------------------- fonction pour créer la galerie
-
-let gallery = document.querySelector('.gallery')
-gallery = document.createElement("div");
+//------------------------- fonction pour créer la galerie----------------------------------//
+let gallery = document.createElement("div");
 gallery.classList.add("gallery");
 
-const createGallery = (lst) => {
-  gallery.innerHTML = lst
+const createGallery = (lstGallery) => {
+  gallery.innerHTML = lstGallery
     .map(
       (img) =>
         `<figure>
     <img src=${img.imageUrl} alt=${img.title}>
     <figcaption>${img.title}</figcaption>
   </figure>
-  `
-    )
+  `)
     .join("");
-
   portfolio.appendChild(gallery);
 };
 
 getWorks();
-
-const logout = document.querySelector('.logout')
-logout?.addEventListener("click", ()=> localStorage.removeItem('user'));
-
 
 // ---------------- Apparition de la modal sur le lien "modifier" -------------------------------//
 
 const modalContainer = document.querySelector(".modal-container");
 const modalTriggers = document.querySelectorAll(".modal-trigger");
 
-modalTriggers.forEach(trigger => trigger.addEventListener("click", toggleModal)
-)
+modalTriggers.forEach(trigger => trigger.addEventListener("click", toggleModal))
 
 function toggleModal() {
   modalContainer.classList.toggle("active")
@@ -95,16 +81,15 @@ function toggleModal() {
 }
 
 const modalLink = document.querySelector(".modalLink");
-if (modalLink != null)
+if (modalLink !== null)
 modalLink.addEventListener("click", firstModal);
-
 
 // ---------------------fonction pour faire apparaitre la galerie dans la modale et ajouter les icones suppression ------------//
 
-function createGalleryModal(elt) {
+function createGalleryModal(lstGallery) {
   const galleryModal = document.querySelector('.gallery_modal');
-  if (galleryModal != null) {
-    galleryModal.innerHTML = elt .map(
+  if (galleryModal !== null) {
+    galleryModal.innerHTML = lstGallery.map(
       (img) =>
         `<div class="img_modal">
           <img src=${img.imageUrl} alt=${img.title} data-id=${img.id}>
@@ -118,8 +103,7 @@ function createGalleryModal(elt) {
     for (let iconDelete of iconsDelete) {
     iconDelete.addEventListener('click', deleteProject)
     }
-  }
-  
+  }  
 }
 
 //------------------------- fonction pour supprimer des projets-------------------------//
@@ -133,13 +117,12 @@ async function deleteProject (e) {
           "Accept": "*/*",
           "Authorization": "Bearer " + localStorage.user,
         },
-      }).then((res) => {
+      }).then(res => {
         if (res.ok) {
           e.target.parentElement.remove()
           getWorks();
-          
         } else if (res.status == "401") {
-          alert('session expirée, merci de vous reconnecter');
+          alert('Session expirée, merci de vous reconnecter');
           document.location.href=("login.html"); 
         }
       })
@@ -152,21 +135,20 @@ const modal = document.querySelector('.modal');
 const modal_add= document.querySelector('.modal_add');
 
 const arrowModal = document.querySelector(".arrow-modal")
-if (arrowModal != null)
+if (arrowModal !== null)
 arrowModal.addEventListener("click", firstModal)
 
 const formUploadImg = document.querySelector(".form_upload_img");
 const labelFile= document.querySelector(".form_add_photo");
 const input_file = document.createElement("input");
-
 const img_element = document.createElement('img');
 img_element.classList.add('img_uploaded')
 
 const btnAdd = document.querySelector('.button_add_gallery');
-btnAdd?.addEventListener('click', modalAdd);
+if (btnAdd !== null)
+btnAdd.addEventListener('click', modalAdd);
 
 const btnValidate= document.querySelector('.button_validate');
-
 
 // fonction qui affiche la première modale
 
@@ -189,10 +171,6 @@ function modalAdd() {
   formUploadImg.appendChild(input_file);
 
   categoriesSelect(lstCategories);
-
-  btnValidate.disabled= true;
-  btnValidate.style.background = "#A7A7A7";
-  btnValidate.style.cursor = "auto";
 }
 
 // Sélectionner une catégorie pour l'image à envoyer
@@ -200,7 +178,7 @@ function categoriesSelect (categories) {
   const categorySelect =  document.getElementById('categories');
 
   categorySelect.innerHTML= `
- <option value ="default" selected required></option>
+ <option value ="default" selected></option>
   `
   categories.forEach((category) => {
     const option = document.createElement('option');
@@ -219,6 +197,8 @@ input_file.addEventListener("change", previewFile);
 function previewFile(e) {
   const file_extension_regex = /\.(jpe?g|png)$/i;
   if(this.files.length === 0 || !file_extension_regex.test(this.files[0].name)) {
+    alert("Format non pris en charge, merci de choisir une autre photo");
+    resetForm();
     return;
   }
 
@@ -238,7 +218,7 @@ function previewFile(e) {
 
 // fonction pour mettre le bouton valider en vert une fois les conditions remplies
 function btnValidateForm() {
-  if (inputTitle.value !="" && selectCategories.value !=="default" &&  input_file.files.length > 0 ) {
+  if (inputTitle.value !=="" && selectCategories.value !=="default" &&  input_file.files.length > 0 ) {
     btnValidate.style.background = "#1D6154";
     btnValidate.disabled= false;
     btnValidate.style.cursor= "pointer";
@@ -249,13 +229,12 @@ function btnValidateForm() {
   }
 };
 
-if (inputTitle != null) {
+if (inputTitle !== null) {
   inputTitle.addEventListener('input', btnValidateForm);
   selectCategories.addEventListener('input', btnValidateForm);
   input_file.addEventListener('input', btnValidateForm);
   formUploadImg.addEventListener('submit', addProject);
 }
-
 
 // Sounission du formulaire et envoie du projet vers la base de données
 
@@ -273,13 +252,13 @@ async function addProject (e) {
       },
       body:formData,
     })
-    .then((res) => {
+    .then(res => {
       if(res.ok) {
         getWorks();
         resetForm();
         firstModal()
       } else if (res.status == "401") {
-        alert('session expirée, merci de vous reconnecter');
+        alert('Session expirée, merci de vous reconnecter');
         document.location.href=("login.html"); 
       }
     })
@@ -294,21 +273,14 @@ function resetForm() {
   <div class="button_add_picture">+ Ajouter photo</div>
   <span class="format_picture">jpg, png: 4mo max</span>
   `
+  input_file.value= "";
   inputTitle.value = "";
   selectCategories.value = "default";
+  btnValidate.disabled= true;
+  btnValidate.style.background = "#A7A7A7";
+  btnValidate.style.cursor = "auto";
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+const logout = document.querySelector('.logout')
+if (logout !== null)
+logout.addEventListener("click", ()=> localStorage.removeItem('user'));

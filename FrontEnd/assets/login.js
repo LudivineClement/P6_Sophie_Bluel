@@ -1,7 +1,3 @@
-function redirection(){
-  document.location.href="edit.html"; 
-}
-
 async function login() {
   const emailLogin = document.getElementById("email").value;
   const passwordLogin = document.getElementById("password").value;
@@ -24,13 +20,10 @@ async function login() {
         res.json()
       .then((data) => {
         const userdata = data.token;
-        if (localStorage.user = userdata) {
-          redirection();
-        } 
-        })} else if (res.status == "401") {
-          document.location.href=("login.html"); 
-        } else {
-          document.querySelector(".error").innerHTML = "identifiants incorrects";
+        if (localStorage.user = userdata) 
+        document.location.href=("edit.html"); 
+        })} else {
+          document.querySelector(".error").innerHTML = "Erreur dans l’identifiant ou le mot de passe";
         }
     });    
 }
@@ -40,5 +33,3 @@ btnForm.addEventListener("submit", (e) => {
   e.preventDefault();
   login();
 });
-
-
